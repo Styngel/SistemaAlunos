@@ -5,10 +5,6 @@ class NotaService:
             def __init__(self):
                 self.arquivo = Arquivo()
 
-            def vincular_disciplina(self, matricula: int, disciplina_id: int):
-                # vinculação já feita em AlunoService, mas deixamos aqui se necessário
-                pass
-
             def dar_nota(self, matricula: int, disciplina_id: int, nota: float):
                 try:
                     nota = float(nota)
@@ -59,6 +55,29 @@ class NotaService:
                     print(f"Erro ao remover nota: {e}")
                 finally:
                     conn.close()
+
+            def atualizar_nota(self, id: int, nova_nota: float):
+                try:
+                    nova_nota = float(nova_nota)
+                    conn = conectar()
+                    cursor = conn.cursor()
+                    cursor.execute(
+                        "UPDATE notas SET nota = ? WHERE id = ?",
+                        (nova_nota, id)
+                    )
+                    conn.commit()
+                    if cursor.rowcount:
+                        print("Nota atualizada com sucesso!")
+                        self._salvar_arquivo()
+                    else:
+                        print("Nota não encontrada.")
+                except ValueError:
+                    print("Erro: nota deve ser um valor decimal.")
+                except Exception as e:
+                    print(f"Erro ao atualizar nota: {e}")
+                finally:
+                    conn.close()
+
 
             def _salvar_arquivo(self):
                 try:

@@ -99,6 +99,7 @@ def menu_notas_geral():
         print("\n--- MENU NOTAS ---")
         print("1. Listar todas notas")
         print("2. Remover nota")
+        print("3. Atualizar nota")
         print("0. Voltar")
 
         opc = input("Escolha: ")
@@ -110,6 +111,15 @@ def menu_notas_geral():
                 nota_service.remover(i)
             except ValueError:
                 print("ID inválido.")
+        elif opc == '3':
+            try:
+                id = int(input("ID da nota a atualizar: "))
+                nova_nota = float(input("Nova nota (ex 8.5): "))
+                nota_service.atualizar_nota(id, nova_nota)
+            except ValueError:
+                print("ID inválido.")
+            except Exception as e:
+                print(f"Erro ao atualizar nota: {e}")
         elif opc == '0':
             break
         else:
