@@ -16,10 +16,11 @@ def menu_alunos():
         print("\n--- MENU ALUNOS ---")
         print("1. Cadastrar aluno")
         print("2. Listar alunos")
-        print("3. Remover aluno")
-        print("4. Vincular disciplina")
-        print("5. Dar nota")
-        print("6. Consultar disciplinas e notas")
+        print("3. Atualizar dados de aluno")
+        print("4. Remover aluno")
+        print("5. Vincular disciplina")
+        print("6. Dar nota")
+        print("7. Consultar disciplinas e notas")
         print("0. Voltar")
 
         opc = input("Escolha: ")
@@ -33,13 +34,13 @@ def menu_alunos():
                 print("Matrícula inválida.")
         elif opc == '2':
             aluno_service.listar()
-        elif opc == '3':
+        elif opc == '4':
             try:
                 m = int(input("Matrícula a remover: "))
                 aluno_service.remover(m)
             except ValueError:
                 print("Matrícula inválida.")
-        elif opc == '4':
+        elif opc == '5':
             try:
                 m = int(input("Matrícula do aluno: "))
                 disciplina_service.listar()
@@ -47,7 +48,7 @@ def menu_alunos():
                 aluno_service.vincular_disciplina(m, d)
             except ValueError:
                 print("Entrada numérica inválida.")
-        elif opc == '5':
+        elif opc == '6':
             try:
                 m = int(input("Matrícula do aluno: "))
                 disciplina_service.listar()
@@ -56,12 +57,28 @@ def menu_alunos():
                 aluno_service.dar_nota(m, d, nota)
             except ValueError:
                 print("Entrada numérica inválida.")
-        elif opc == '6':
+        elif opc == '7':
             try:
                 m = int(input("Matrícula do aluno: "))
                 aluno_service.listar_disciplinas_e_notas(m)
             except ValueError:
                 print("Matrícula inválida.")
+
+        elif opc == "3":
+            try:
+                matricula = int(input("Matrícula atual do aluno: "))
+            except ValueError:
+                print("Erro: Digite um número inteiro válido para matrícula.")
+                continue
+            novo_nome = input("Novo nome (deixe em branco para manter): ")
+            novo_cpf = input("Novo CPF (deixe em branco para manter): ")
+    
+            # Passa None se o campo estiver em branco
+            aluno_service.atualizar_aluno(
+                matricula,
+                novo_nome if novo_nome else None,
+                novo_cpf if novo_cpf else None,
+            )
         elif opc == '0':
             break
         else:

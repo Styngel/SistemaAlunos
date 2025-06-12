@@ -1,6 +1,7 @@
 from database.db import conectar
 from services.arquivo import Arquivo
 from models.aluno import Aluno
+from typing import Optional
 
 class AlunoService:
     def __init__(self):
@@ -136,6 +137,41 @@ class AlunoService:
             print(f"Erro ao listar disciplinas e notas: {e}")
         finally:
             conn.close()
+            
+    def atualizar_aluno(self, matricula: int, novo_nome: Optional[str] = None, novo_cpf: Optional[str] = None):
+        try:
+            conn = conectar()
+            cursor = conn.cursor()
+
+            # Verifica se o aluno existe
+            cursor.execute("SELECT nome, cpf FROM alunos WHERE matricula = ?", (matricula,))
+            aluno = cursor.fetchone()
+            if not aluno:
+                print("Aluno não encontrado.")
+                return
+
+            # Define os novos valores, mantendo os antigos se não forem informados
+            nome_final = novo_nome if novo_nome else aluno[0]
+            cpf_final = novo_cpf if novo_cpf else aluno[1]
+
+            # Atualiza no banco de dados
+            cursor.execute(
+                "UPDATE alunos SET nome = ?, cpf = ? WHERE matricula = ?",
+                (nome_final, cpf_final, matricula)
+            )
+            conn.commit()
+
+            if cursor.rowcount:
+                print("Aluno atualizado com sucesso!")
+                self._salvar_arquivo()
+            else:
+                print("Nenhuma alteração feita.")
+        except Exception as e:
+            print(f"Erro ao atualizar aluno: {e}")
+        finally:
+            conn.close()
+
+    
 
     def _salvar_vinculos_arquivo(self):
         try:
